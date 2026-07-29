@@ -1,0 +1,8 @@
+name: deceiv
+version: '1.0.0'
+main: com.japicraft.deceiv
+description: A murder mystery minigame.
+api-version: '26.2'
+authors: [ japicraft ]
+website: https://japicraft.com
+folia-supported: false
