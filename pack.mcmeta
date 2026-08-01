@@ -1,0 +1,24 @@
+{
+  "pack": {
+    "description": [
+      {
+        "color": "#FA003F",
+        "text": "Deceiv Assets Pack\n"
+      },
+      {
+        "color": "#CCCCCC",
+        "text": "vPACK_VERSION"
+      },
+      {
+        "color": "#FFFFFF",
+        "text": " | "
+      },
+      {
+        "color": "#CCCCCC",
+        "text": "GIT_HASH"
+      }
+    ],
+    "min_format": 88,
+    "max_format": 88
+  }
+}

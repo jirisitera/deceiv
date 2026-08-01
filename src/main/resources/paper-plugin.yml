@@ -1,8 +1,13 @@
-name: deceiv
-version: '1.0.0'
-main: com.japicraft.deceiv
+name: Deceiv
+version: '${version}'
+main: com.japicraft.Deceiv
 description: A murder mystery minigame.
 api-version: '26.2'
 authors: [ japicraft ]
 website: https://japicraft.com
 folia-supported: false
+dependencies:
+  server:
+    BetterModel:
+      load: AFTER
+      required: true
