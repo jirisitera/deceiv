@@ -16,14 +16,14 @@ jobs:
       - uses: actions/checkout@v7
       - name: check version
         run: |
-          if git rev-parse --verify "refs/tags/${{ inputs.pack_version }}" >/dev/null 2>&1; then
-            echo "Version ${{ inputs.pack_version }} already exists!"
+          if git rev-parse --verify 'refs/tags/${{ inputs.pack_version }}' >/dev/null 2>&1; then
+            echo 'Version ${{ inputs.pack_version }} already exists!'
             exit 1
           fi
       - name: replace version and hash
         run: |
-          sed -i "s/INDEV/${{ inputs.pack_version }}/g" build.gradle.kts
-          echo "Replaced PACK_VERSION with '${{ inputs.pack_version }}' successfully!"
+          sed -i 's/INDEV/${{ inputs.pack_version }}/g' build.gradle.kts
+          echo 'Replaced PACK_VERSION with '${{ inputs.pack_version }}' successfully!'
       - uses: actions/setup-java@v5
         with:
           java-version: 25
@@ -36,7 +36,7 @@ jobs:
           version: ${{ inputs.project_version }}
           files: 'build/libs/deceiv.jar'
           loaders: paper
-          game-versions: ">=${{ inputs.minecraft_version }}"
+          game-versions: '>=${{ inputs.minecraft_version }}'
           modrinth-id: AnCT3bvm
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true
@@ -49,17 +49,17 @@ jobs:
           fetch-depth: 0
       - name: check version
         run: |
-          if git rev-parse --verify "refs/tags/${{ inputs.pack_version }}" >/dev/null 2>&1; then
-            echo "Version ${{ inputs.pack_version }} already exists!"
+          if git rev-parse --verify 'refs/tags/${{ inputs.pack_version }}' >/dev/null 2>&1; then
+            echo 'Version ${{ inputs.pack_version }} already exists!'
             exit 1
           fi
       - name: replace version and hash
         run: |
-          sed -i "s/PACK_VERSION/${{ inputs.pack_version }}/g" pack.mcmeta
-          echo "Replaced PACK_VERSION with '${{ inputs.pack_version }}' successfully!"
+          sed -i 's/PACK_VERSION/${{ inputs.pack_version }}/g' pack.mcmeta
+          echo 'Replaced PACK_VERSION with '${{ inputs.pack_version }}' successfully!'
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          sed -i "s/GIT_HASH/$calculatedSha/g" pack.mcmeta
-          echo "Replaced GIT_HASH with '$calculatedSha' successfully!"
+          sed -i 's/GIT_HASH/$calculatedSha/g' pack.mcmeta
+          echo 'Replaced GIT_HASH with '$calculatedSha' successfully!'
       - uses: ComunidadAylas/PackSquash-action@v4
         with:
           packsquash_version: latest
@@ -70,7 +70,7 @@ jobs:
           version: ${{ inputs.project_version }}
           files: 'deceiv.zip'
           loaders: minecraft
-          game-versions: ">=${{ inputs.minecraft_version }}"
+          game-versions: '>=${{ inputs.minecraft_version }}'
           modrinth-id: AnCT3bvm
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           modrinth-featured: true

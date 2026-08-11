@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "model",
-    "model": "deceiv:item/knife_large"
+    "model": "deceiv:item/knife/default"
   }
 }

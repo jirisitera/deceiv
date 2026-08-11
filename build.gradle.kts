@@ -1,7 +1,7 @@
 plugins {
     id("java")
     id("com.gradleup.shadow") version "9.6.1"
-    id("xyz.jpenilla.run-paper") version "3.0.2"
+    id("xyz.jpenilla.run-paper") version "3.1.0"
 }
 group = "com.japicraft"
 version = "INDEV"
@@ -36,7 +36,7 @@ tasks {
     runServer {
         minecraftVersion("26.2")
         downloadPlugins {
-            url("https://cdn.modrinth.com/data/4h8rX3rt/versions/lMsPP60H/bettermodel-3.3.0-paper.jar")
+            modrinth("4h8rX3rt", "wBHEkpnw")
         }
     }
 }

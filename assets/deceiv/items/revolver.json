@@ -1,0 +1,14 @@
+{
+  "model": {
+    "type": "condition",
+    "on_false": {
+      "type": "model",
+      "model": "deceiv:item/revolver/default"
+    },
+    "on_true": {
+      "type": "model",
+      "model": "deceiv:item/revolver/ready"
+    },
+    "property": "minecraft:using_item"
+  }
+}

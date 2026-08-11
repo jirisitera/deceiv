@@ -14,9 +14,17 @@ public class BetterModelReload implements Listener {
     @EventHandler
     public void onBetterModelReload(BetterModelBukkitEvent bukkitEvent) throws IOException {
         ModelAssetsEvent event = bukkitEvent.as(ModelAssetsEvent.class);
-        InputStream in = Deceiv.plugin.getResource("knife.bbmodel");
-        if (event != null && in != null) {
-            event.addAsset(ModelAsset.of("knife", in.readAllBytes()));
+        if (event == null) {
+            return;
+        }
+        addAsset(event, "knife.bbmodel", "knife");
+        addAsset(event, "player.bbmodel", "player");
+    }
+
+    private void addAsset(ModelAssetsEvent event, String path, String name) throws IOException {
+        InputStream asset = Deceiv.plugin.getResource(path);
+        if (asset != null) {
+            event.addAsset(ModelAsset.of(name, asset.readAllBytes()));
         }
     }
 }

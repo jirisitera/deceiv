@@ -3,23 +3,25 @@ package com.japicraft;
 import com.japicraft.registry.CommandRegistry;
 import com.japicraft.registry.EventRegistry;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Interaction;
+import org.bukkit.entity.Snowball;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public final class Deceiv extends JavaPlugin {
-    public static Plugin plugin;
-    public static PluginManager pluginManager;
-    public static BukkitScheduler scheduler;
     public static final String PLUGIN_ID = "deceiv";
+    public static Plugin plugin;
 
     @Override
     public void onEnable() {
         plugin = this;
-        pluginManager = Bukkit.getPluginManager();
-        scheduler = Bukkit.getScheduler();
         CommandRegistry.register(this);
         EventRegistry.register(this);
+    }
+
+    @Override
+    public void onDisable() {
+        Bukkit.getWorlds().forEach(world -> world.getEntitiesByClasses(Snowball.class, Interaction.class).forEach(Entity::remove));
     }
 }

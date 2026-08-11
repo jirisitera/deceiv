@@ -1,7 +1,8 @@
 name: Deceiv
 version: '${version}'
 main: com.japicraft.Deceiv
-description: A murder mystery minigame.
+bootstrapper: com.japicraft.Bootstrapper
+description: A modern murder mystery minigame.
 api-version: '26.2'
 authors: [ japicraft ]
 website: https://japicraft.com

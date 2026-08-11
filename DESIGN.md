@@ -14,5 +14,7 @@ A modern take on murder mystery minigame genre.
 ### Innocent
 
 ### Detective
+- better firearm handling
+- infinite firearm ammo (with cooldown)
 
 ### Murderer

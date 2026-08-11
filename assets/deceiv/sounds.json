@@ -1,0 +1,32 @@
+{
+  "knife.prepare": {
+    "sounds": [
+      "deceiv:knife/prepare"
+    ]
+  },
+  "knife.stab": {
+    "sounds": [
+      "deceiv:knife/stab"
+    ]
+  },
+  "knife.throw": {
+    "sounds": [
+      "deceiv:knife/throw"
+    ]
+  },
+  "revolver.shoot": {
+    "sounds": [
+      "deceiv:revolver/shoot"
+    ]
+  },
+  "revolver.prepare": {
+    "sounds": [
+      "deceiv:revolver/prepare"
+    ]
+  },
+  "revolver.ready": {
+    "sounds": [
+      "deceiv:revolver/ready"
+    ]
+  }
+}
