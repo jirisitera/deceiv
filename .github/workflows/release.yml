@@ -59,10 +59,7 @@ jobs:
         with:
           packsquash_version: latest
           options: options.toml
-      - uses: actions/upload-artifact@v4
-        with:
-          name: pack
-          path: deceiv.zip
+          artifact_name: pack
   publish:
     needs: [plugin, pack]
     runs-on: ubuntu-latest
