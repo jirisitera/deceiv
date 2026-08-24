@@ -7,7 +7,7 @@ on:
         description: 'Current project version: (e.g. 26.1.0)'
         required: true
       minecraft_version:
-        description: 'Lowest supported MC version: (e.g. 26.1.2)'
+        description: 'Supported MC version: (e.g. 26.1.2)'
         required: true
 permissions:
   contents: write
