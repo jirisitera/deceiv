@@ -1,17 +1,17 @@
 {
-  "knife.prepare": {
+  "dagger.prepare": {
     "sounds": [
-      "deceiv:knife/prepare"
+      "deceiv:dagger/prepare"
     ]
   },
-  "knife.stab": {
+  "dagger.stab": {
     "sounds": [
-      "deceiv:knife/stab"
+      "deceiv:dagger/stab"
     ]
   },
-  "knife.throw": {
+  "dagger.throw": {
     "sounds": [
-      "deceiv:knife/throw"
+      "deceiv:dagger/throw"
     ]
   },
   "revolver.shoot": {

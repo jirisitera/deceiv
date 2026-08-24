@@ -11,7 +11,7 @@ repositories {
 }
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.+")
-    compileOnly("io.github.toxicity188:bettermodel-bukkit-api:3.3.0")
+    compileOnly("io.github.toxicity188:bettermodel-bukkit-api:3.4.1")
 }
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(25))
@@ -36,7 +36,7 @@ tasks {
     runServer {
         minecraftVersion("26.2")
         downloadPlugins {
-            modrinth("4h8rX3rt", "wBHEkpnw")
+            modrinth("4h8rX3rt", "sbJmmsSd")
         }
     }
 }

@@ -10,5 +10,5 @@ folia-supported: false
 dependencies:
   server:
     BetterModel:
-      load: AFTER
-      required: true
+      load: BEFORE
+      required: false
