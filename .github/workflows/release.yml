@@ -1,14 +1,14 @@
 name: Deceiv
+run-name: Deceiv Build Version ${{ inputs.project_version }}
 on:
   workflow_dispatch:
     inputs:
       project_version:
-        description: 'Current version of the project: (e.g., 26.1.0)'
+        description: 'Current project version: (e.g. 26.1.0)'
         required: true
       minecraft_version:
-        description: 'Lowest supported Minecraft version: (e.g., 26.1.2)'
+        description: 'Lowest supported MC version: (e.g. 26.1.2)'
         required: true
-run-name: Deceiv Build Version ${{ inputs.project_version }}
 permissions:
   contents: write
 jobs:
@@ -32,17 +32,10 @@ jobs:
           distribution: temurin
       - uses: gradle/actions/setup-gradle@v6
       - run: gradle shadowJar
-      - uses: Kir-Antipov/mc-publish@v3
+      - uses: actions/upload-artifact@v7
         with:
-          name: Deceiv Plugin for Minecraft ${{ inputs.minecraft_version }}+
-          version: ${{ inputs.project_version }}
-          files: 'build/libs/deceiv.jar'
-          loaders: paper
-          game-versions: '>=${{ inputs.minecraft_version }}'
-          modrinth-id: AnCT3bvm
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          modrinth-featured: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          name: plugin
+          path: build/libs/deceiv.jar
   pack:
     runs-on: ubuntu-latest
     steps:
@@ -66,12 +59,27 @@ jobs:
         with:
           packsquash_version: latest
           options: options.toml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pack
+          path: deceiv.zip
+  publish:
+    needs: [plugin, pack]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: artifacts
       - uses: Kir-Antipov/mc-publish@v3
         with:
-          name: Deceiv Pack for Minecraft ${{ inputs.minecraft_version }}+
+          name: Deceiv v${{ inputs.project_version }} (for MC ${{ inputs.minecraft_version }}+)
           version: ${{ inputs.project_version }}
-          files: 'deceiv.zip'
-          loaders: minecraft
+          files: |
+            artifacts/plugin/deceiv.jar
+            artifacts/pack/deceiv.zip
+          loaders: |
+            paper
+            minecraft
           game-versions: '>=${{ inputs.minecraft_version }}'
           modrinth-id: AnCT3bvm
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
