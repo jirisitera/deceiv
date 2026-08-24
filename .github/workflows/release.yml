@@ -53,8 +53,8 @@ jobs:
           sed -i 's/PACK_VERSION/${{ inputs.project_version }}/g' pack.mcmeta
           echo 'Replaced PACK_VERSION with '${{ inputs.project_version }}' successfully!'
           calculatedSha=$(git rev-parse --short ${{ github.sha }})
-          sed -i 's/GIT_HASH/$calculatedSha/g' pack.mcmeta
-          echo 'Replaced GIT_HASH with '$calculatedSha' successfully!'
+          sed -i "s/GIT_HASH/$calculatedSha/g" pack.mcmeta
+          echo "Replaced GIT_HASH with $calculatedSha successfully!"
       - uses: ComunidadAylas/PackSquash-action@v4
         with:
           packsquash_version: latest
