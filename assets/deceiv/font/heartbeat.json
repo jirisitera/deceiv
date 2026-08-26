@@ -1,0 +1,25 @@
+{
+  "providers": [
+    {
+      "type": "bitmap",
+      "ascent": 16,
+      "height": 512,
+      "file": "deceiv:gui/heartbeat/calm.png",
+      "chars": ["1"]
+    },
+    {
+      "type": "bitmap",
+      "ascent": -20,
+      "height": 8,
+      "file": "deceiv:gui/progress.png",
+      "chars": ["|"]
+    },
+    {
+      "type": "space",
+      "advances": {
+        " ": 30,
+        "/": -50
+      }
+    }
+  ]
+}

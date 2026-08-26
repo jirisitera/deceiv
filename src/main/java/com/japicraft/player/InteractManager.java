@@ -1,13 +1,12 @@
-package com.japicraft.game;
+package com.japicraft.player;
 
 import com.japicraft.container.GameContainer;
 import com.japicraft.event.PlayerEliminateEvent;
+import com.japicraft.game.Role;
 import com.japicraft.item.DaggerManager;
 import com.japicraft.item.ItemManager;
 import com.japicraft.item.ItemUtilities;
 import com.japicraft.item.RevolverManager;
-import com.japicraft.player.AnimationManager;
-import com.japicraft.player.PlayerUtilities;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;

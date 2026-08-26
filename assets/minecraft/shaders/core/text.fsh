@@ -21,6 +21,7 @@ out vec4 fragColor;
 
 #ifdef IS_GUI
 in float effect;
+in vec3 identifier;
 #endif
 
 float topologize(float noise) {
@@ -89,7 +90,6 @@ vec4 renderBackground(in vec2 fragCoord) {
 
     return texture(Sampler0, wrappedUV) * vertexColor * ColorModulator;
 }
-
 bool isWithinDotRadius(in vec2 fragCoord) {
     float dotSize = 40.0;
     vec2 pixelatedCoord = roundToPixelGrid(fragCoord.xy, 4);
@@ -106,7 +106,6 @@ bool isWithinDotRadius(in vec2 fragCoord) {
 
     return length(local) * 2.0 >= radius;
 }
-
 
 void main() {
 #ifdef IS_GRAYSCALE
@@ -135,7 +134,7 @@ void main() {
             discard;
         }
         fragColor = color;
-    } else if (effect > 0.0) {
+    } else if (effect > 0.0 && effect < 100.0) {
         if (isWithinDotRadius(gl_FragCoord.xy) || color.a == 0.0) {
             discard;
         }
@@ -144,8 +143,14 @@ void main() {
         } else if (effect == 2.0) {
             fragColor = renderBackground(gl_FragCoord.xy);
         }
+    } else if (effect > 100.0 && effect < 200.0) {
+        if (color.a < 0.1 || color.rgb == identifier) {
+            discard;
+        }
+        fragColor = color;
     }
 #else
     fragColor = apply_fog(color, sphericalVertexDistance, cylindricalVertexDistance, FogEnvironmentalStart, FogEnvironmentalEnd, FogRenderDistanceStart, FogRenderDistanceEnd, FogColor);
 #endif
+
 }

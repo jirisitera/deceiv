@@ -1,5 +1,6 @@
 package com.japicraft;
 
+import com.japicraft.registry.PacketRegistry;
 import com.japicraft.registry.PluginRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
@@ -9,6 +10,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Deceiv extends JavaPlugin {
     public static final String PLUGIN_ID = "deceiv";
+
+    @Override
+    public void onLoad() {
+        new PacketRegistry().initialize();
+    }
 
     @Override
     public void onEnable() {

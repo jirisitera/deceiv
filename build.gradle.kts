@@ -8,10 +8,12 @@ version = "INDEV"
 repositories {
     mavenCentral()
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
+    maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
 }
 dependencies {
     compileOnly("io.papermc.paper:paper-api:26.2.build.+")
     compileOnly("io.github.toxicity188:bettermodel-bukkit-api:3.4.1")
+    compileOnly("com.github.retrooper:packetevents-spigot:2.13.0")
 }
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(25))
@@ -37,6 +39,7 @@ tasks {
         minecraftVersion("26.2")
         downloadPlugins {
             modrinth("4h8rX3rt", "sbJmmsSd")
+            modrinth("HYKaKraK", "2.13.0+spigot")
         }
     }
 }

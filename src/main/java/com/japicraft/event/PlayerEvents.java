@@ -1,15 +1,20 @@
 package com.japicraft.event;
 
+import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import com.japicraft.container.GameContainer;
 import com.japicraft.game.GameManager;
 import com.japicraft.game.Role;
+import com.japicraft.packet.HungerPacket;
 import com.japicraft.player.AnimationManager;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -21,6 +26,22 @@ public class PlayerEvents implements Listener {
     public PlayerEvents(GameContainer gameContainer, AnimationManager animationManager) {
         this.gameContainer = gameContainer;
         this.animationManager = animationManager;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        HungerPacket.showVisualHungerEffect(player);
+        AttributeInstance maxHealth = player.getAttribute(Attribute.MAX_HEALTH);
+        if (maxHealth != null) {
+            player.setHealth(maxHealth.getValue());
+        }
+    }
+
+    @EventHandler
+    public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
+        Player player = event.getPlayer();
+        HungerPacket.showVisualHungerEffect(player);
     }
 
     @EventHandler

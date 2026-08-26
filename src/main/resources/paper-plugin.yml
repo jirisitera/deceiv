@@ -9,6 +9,9 @@ website: https://japicraft.com
 folia-supported: false
 dependencies:
   server:
+    packetevents:
+      load: BEFORE
+      required: true
     BetterModel:
       load: BEFORE
       required: false
