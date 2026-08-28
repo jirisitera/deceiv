@@ -31,7 +31,7 @@ public class Arena {
         activePlayers.clear();
     }
 
-    public boolean isInGame(Player player) {
+    public boolean isPresent(Player player) {
         return activePlayers.contains(player);
     }
 

@@ -1,7 +1,7 @@
 package com.japicraft.ui;
 
 import com.japicraft.Deceiv;
-import com.japicraft.game.GameManager;
+import com.japicraft.game.GameInstance;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.Component;
@@ -29,14 +29,14 @@ public class CountdownInterface {
         displayBar.progress(currentTicks / 600.0F);
     }
 
-    public void initialize(Deceiv plugin, GameManager gameManager) {
+    public void initialize(Deceiv plugin, GameInstance gameInstance) {
         counter = new AtomicInteger(CountdownInterface.GAME_LENGTH_SECONDS);
         update(CountdownInterface.GAME_LENGTH_SECONDS);
         Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, task -> {
             int currentTicks = counter.getAndDecrement();
             update(currentTicks);
             if (currentTicks <= 0) {
-                gameManager.endRound();
+                gameInstance.endRound();
                 task.cancel();
             }
         }, 20, 20);

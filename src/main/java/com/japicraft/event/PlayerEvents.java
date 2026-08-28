@@ -2,7 +2,7 @@ package com.japicraft.event;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
 import com.japicraft.container.GameContainer;
-import com.japicraft.game.GameManager;
+import com.japicraft.game.GameInstance;
 import com.japicraft.game.Role;
 import com.japicraft.packet.HungerPacket;
 import com.japicraft.player.AnimationManager;
@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -39,9 +40,18 @@ public class PlayerEvents implements Listener {
     }
 
     @EventHandler
-    public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
+    public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        HungerPacket.showVisualHungerEffect(player);
+        GameInstance gameInstance = gameContainer.getGameInstance(player);
+        if (gameInstance == null) {
+            return;
+        }
+        gameContainer.removePlayerFromGame(player, gameInstance);
+    }
+
+    @EventHandler
+    public void onPlayerPostRespawn(PlayerPostRespawnEvent event) {
+        HungerPacket.showVisualHungerEffect(event.getPlayer());
     }
 
     @EventHandler
@@ -62,8 +72,8 @@ public class PlayerEvents implements Listener {
         Player victim = event.getVictim();
         Player killer = event.getKiller();
         // get game instance
-        GameManager gameManager = gameContainer.getGameInstance(victim);
-        if (!gameManager.equals(gameContainer.getGameInstance(killer))) {
+        GameInstance gameInstance = gameContainer.getGameInstance(victim);
+        if (gameInstance == null || !gameInstance.equals(gameContainer.getGameInstance(killer))) {
             return;
         }
         // remove player from game
@@ -75,15 +85,19 @@ public class PlayerEvents implements Listener {
         // check if the game is supposed to end
         boolean noMurderers = true;
         boolean onlyMurderers = true;
-        for (Player player : gameManager.getPlayers()) {
-            if (gameManager.getPlayerRole(player).equals(Role.MURDERER)) {
+        for (Player player : gameInstance.getPlayers()) {
+            Role role = gameInstance.getPlayerRole(player);
+            if (role == null) {
+                continue;
+            }
+            if (role.equals(Role.MURDERER)) {
                 noMurderers = false;
             } else {
                 onlyMurderers = false;
             }
         }
         if (noMurderers || onlyMurderers) {
-            gameManager.endRound();
+            gameInstance.endRound();
         }
     }
 }

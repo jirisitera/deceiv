@@ -39,11 +39,11 @@ public class PlayerUtilities {
 
     public static void applyKnockback(Player attacker, Player victim) {
         Vector direction = victim.getLocation().toVector().subtract(attacker.getLocation().toVector());
-        victim.knockback(1.2, direction.getX(), direction.getZ());
-        // apply slight upward force
-        Vector newVelocity = victim.getVelocity();
-        newVelocity.setY(newVelocity.getY() + 0.2);
-        victim.setVelocity(newVelocity);
+        if (direction.lengthSquared() == 0) {
+            direction = attacker.getLocation().getDirection();
+        }
+        direction.normalize();
+        victim.knockback(0.75, -direction.getX(), -direction.getZ());
     }
 
     public static String getRawProfileTextures(PlayerProfile profile) {

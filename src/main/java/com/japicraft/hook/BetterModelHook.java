@@ -2,8 +2,7 @@ package com.japicraft.hook;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.japicraft.Deceiv;
-import com.japicraft.item.DaggerManager;
-import com.japicraft.player.AnimationManager;
+import com.japicraft.item.UniqueItem;
 import com.japicraft.player.PlayerUtilities;
 import kr.toxicity.model.api.BetterModel;
 import kr.toxicity.model.api.animation.AnimationIterator;
@@ -26,6 +25,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class BetterModelHook implements Listener {
     private static final String DEATH_ANIMATION = "death";
@@ -38,29 +38,27 @@ public class BetterModelHook implements Listener {
         this.plugin = plugin;
     }
 
-    public static void playDeathAnimation(Player player, Entity body) {
+    public static void playDeathAnimation(Player player, Entity corpse) {
         BetterModel.limb(PlayerUtilities.PLAYER_MODEL)
-            .map(renderer -> renderer.getOrCreate(BukkitAdapter.adapt(body), getModelProfile(player)))
+            .map(renderer -> renderer.getOrCreate(BukkitAdapter.adapt(corpse), getModelProfile(player)))
             .ifPresent(tracker -> tracker.animate(BetterModelHook.DEATH_ANIMATION, BetterModelHook.HOLD_ON_LAST));
     }
 
-    public static void playThrowAnimation(Entity projectile) {
-        BetterModel.model(DaggerManager.MODEL)
+    public static void playDaggerThrowAnimation(Entity projectile) {
+        BetterModel.model(UniqueItem.DAGGER.getModel())
             .map(renderer -> renderer.getOrCreate(BukkitAdapter.adapt(projectile)))
             .ifPresent(tracker -> tracker.animate(BetterModelHook.THROW_ANIMATION));
     }
 
-    public static void playRollAnimation(Player player, AnimationManager animationManager) {
-        if (animationManager.isPlayerAnimationLocked(player)) {
-            return;
-        }
-        animationManager.lockPlayerAnimation(player);
+    public static CompletableFuture<Void> playRollAnimation(Player player) {
+        CompletableFuture<Void> state = new CompletableFuture<>();
         BetterModel.limb(PlayerUtilities.PLAYER_MODEL)
             .map(renderer -> renderer.getOrCreate(BukkitAdapter.adapt(player)))
-            .ifPresent(tracker -> tracker.animate(BetterModelHook.ROLL_ANIMATION, AnimationModifier.DEFAULT, () -> {
-                animationManager.unlockPlayerAnimation(player);
+            .ifPresentOrElse(tracker -> tracker.animate(BetterModelHook.ROLL_ANIMATION, AnimationModifier.DEFAULT, () -> {
+                state.complete(null);
                 tracker.close();
-            }));
+            }), () -> state.complete(null));
+        return state;
     }
 
     private static ModelProfile getModelProfile(Player player) {
@@ -91,8 +89,8 @@ public class BetterModelHook implements Listener {
         if (event == null) {
             return;
         }
-        addAsset(event, "dagger.bbmodel", "dagger");
-        addAsset(event, "player.bbmodel", "player");
+        addAsset(event, UniqueItem.DAGGER.getModel() + ".bbmodel", UniqueItem.DAGGER.getModel());
+        addAsset(event, PlayerUtilities.PLAYER_MODEL + ".bbmodel", PlayerUtilities.PLAYER_MODEL);
     }
 
     private void addAsset(ModelAssetsEvent event, String path, String name) throws IOException {

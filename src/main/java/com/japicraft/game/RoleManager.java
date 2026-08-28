@@ -4,13 +4,14 @@ import com.japicraft.item.DaggerManager;
 import com.japicraft.item.RevolverManager;
 import com.japicraft.math.ChanceUtilities;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 public class RoleManager {
-    private final Map<UUID, Role> assignedRoles = new HashMap<>();
+    private final Map<Player, Role> assignedRoles = new HashMap<>();
     private final Map<Role, Integer> totalRoleWeights = new HashMap<>();
 
     public static void clearChances(Player player) {
@@ -34,15 +35,16 @@ public class RoleManager {
     }
 
     public void assignRole(Player player, Role role) {
-        assignedRoles.put(player.getUniqueId(), role);
+        assignedRoles.put(player, role);
     }
 
+    @Nullable
     public Role getRole(Player player) {
-        return assignedRoles.getOrDefault(player.getUniqueId(), Role.INNOCENT);
+        return assignedRoles.get(player);
     }
 
     public boolean hasRole(Player player) {
-        return assignedRoles.containsKey(player.getUniqueId());
+        return assignedRoles.containsKey(player);
     }
 
     public void clearRoles() {

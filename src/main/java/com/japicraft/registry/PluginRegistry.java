@@ -38,8 +38,6 @@ public class PluginRegistry {
         GameContainer gameContainer = new GameContainer(plugin);
         // player systems
         AnimationManager animationManager = new AnimationManager();
-        // items
-        ItemManager itemManager = new ItemManager(plugin, animationManager);
         // commands
         commands.add(new ApexCommand(gameContainer).build());
         // events
@@ -47,7 +45,8 @@ public class PluginRegistry {
         events.add(new CancelledEvents());
         events.add(new PlayerEvents(gameContainer, animationManager));
         events.add(new DialogManager());
-        events.add(new InteractManager(gameContainer, animationManager, itemManager));
+        events.add(new InteractManager(gameContainer));
+        events.add(new ItemManager(plugin, animationManager));
         // register everything
         registerCommands(commands);
         registerEvents(events);

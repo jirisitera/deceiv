@@ -1,37 +1,49 @@
 package com.japicraft.game;
 
 import com.japicraft.Deceiv;
-import com.japicraft.ui.ColorUtilities;
+import com.japicraft.player.Mood;
+import com.japicraft.player.MoodManager;
+import com.japicraft.ui.ActionBarManager;
 import com.japicraft.ui.CountdownInterface;
 import com.japicraft.ui.InterfaceUtilities;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.object.ObjectContents;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class GameManager implements Listener {
+public class GameInstance implements Listener {
     private final Deceiv plugin;
-    private final RoleManager roleManager;
-    private final CountdownInterface countdownInterface;
     private final Arena arena;
+    private final CountdownInterface countdownInterface;
+    private final RoleManager roleManager;
+    private final MoodManager moodManager;
     private boolean isRoundInProgress = false;
 
-    public GameManager(Deceiv plugin, ArenaLimits arenaLimits) {
+    public GameInstance(Deceiv plugin, ArenaLimits arenaLimits) {
         this.plugin = plugin;
-        this.countdownInterface = new CountdownInterface();
-        this.roleManager = new RoleManager();
         this.arena = new Arena(arenaLimits);
+        this.countdownInterface = new CountdownInterface();
+        this.moodManager = new MoodManager();
+        this.roleManager = new RoleManager();
     }
 
     public int getRequiredPlayerCount() {
         return arena.getRequiredPlayerCount();
     }
 
+    @Nullable
     public Role getPlayerRole(Player player) {
         return roleManager.getRole(player);
+    }
+
+    public boolean isPresent(Player player) {
+        return arena.isPresent(player);
+    }
+
+    public Mood getMood(Player player) {
+        return moodManager.get(player);
     }
 
     public List<Player> getPlayers() {
@@ -41,45 +53,32 @@ public class GameManager implements Listener {
     public boolean addPlayer(Player player) {
         boolean state = arena.join(player);
         countdownInterface.show(player);
-        scheduleActionBar(player);
+        ActionBarManager.schedule(player, plugin, this);
+        moodManager.set(player, Mood.CALM);
         return state;
     }
 
+    public int getRelativeChance(Player player, Role role) {
+        return roleManager.getRelativeChance(player, role);
+    }
+
+    public boolean hasRole(Player player) {
+        return roleManager.hasRole(player);
+    }
+
     public void removePlayer(Player player) {
-        countdownInterface.hide(player);
-        InterfaceUtilities.clearActionBar(player);
         arena.leave(player);
+        countdownInterface.hide(player);
+        ActionBarManager.clear(player);
     }
 
     public void delete() {
         endRound();
-        InterfaceUtilities.clearActionBar(Audience.audience(arena.getPlayers()));
-        countdownInterface.hide(Audience.audience(getPlayers()));
         arena.delete();
     }
 
     public void recalculateArenaChances() {
         roleManager.recalculateRoleChances(arena);
-    }
-
-    public void scheduleActionBar(Player player) {
-        player.getScheduler().runAtFixedRate(plugin, task -> {
-            if (!player.isOnline() || !arena.isInGame(player)) {
-                task.cancel();
-                return;
-            }
-            Component actionBarDisplay;
-            if (roleManager.hasRole(player)) {
-                actionBarDisplay = Component.text("You are a ").append(roleManager.getRole(player).getDisplayName());
-            } else {
-                actionBarDisplay = Component.object(ObjectContents.playerHead(player.getUniqueId()))
-                    .append(Component.text(" | ").color(ColorUtilities.GRAY))
-                    .append(Component.text("Murderer: " + roleManager.getRelativeChance(player, Role.MURDERER) + "%").color(Role.MURDERER.getColor()))
-                    .append(Component.text(" | ").color(ColorUtilities.GRAY))
-                    .append(Component.text("Detective: " + roleManager.getRelativeChance(player, Role.DETECTIVE) + "%").color(Role.DETECTIVE.getColor()));
-            }
-            player.sendActionBar(actionBarDisplay);
-        }, null, 1, 30);
     }
 
     public boolean startRound() {
@@ -102,12 +101,14 @@ public class GameManager implements Listener {
     }
 
     public boolean endRound() {
+        countdownInterface.hide(Audience.audience(getPlayers()));
+        ActionBarManager.clear(Audience.audience(getPlayers()));
+        // only perform if there is an actual round in progress
         if (!isRoundInProgress()) {
             return false;
         }
         isRoundInProgress = false;
         roleManager.clearRoles();
-        countdownInterface.hide(Audience.audience(getPlayers()));
         return true;
     }
 }

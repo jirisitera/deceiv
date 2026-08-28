@@ -3,7 +3,6 @@ package com.japicraft.ui;
 import com.japicraft.Deceiv;
 import com.japicraft.game.Role;
 import io.papermc.paper.threadedregions.scheduler.EntityScheduler;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.object.ObjectContents;
@@ -24,10 +23,6 @@ public class InterfaceUtilities {
     private static final Component ROLE_COMPONENT = Component.text(" | Role: ").color(ColorUtilities.WHITE);
     private static final Component UNKNOWN_COMPONENT = Component.text("???").color(ColorUtilities.GOLD);
     private static final Title BASE_TRANSITION_TITLE = Title.title(TRANSITION_LOADING_COMPONENT, Component.empty(), TRANSITION_FADE, TRANSITION_STAY, TRANSITION_FADE);
-
-    public static void clearActionBar(Audience audience) {
-        audience.sendActionBar(Component.empty());
-    }
 
     public static void showTransition(Player player, Role role, Deceiv plugin) {
         EntityScheduler scheduler = player.getScheduler();

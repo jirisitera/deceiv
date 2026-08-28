@@ -1,16 +1,22 @@
 package com.japicraft.player;
 
 public enum Mood {
-    EAT("Eat something, yummy preferably."),
-    NERVOUS("Rest in a bed for a while."),
-    TERRIFIED("Have a drink, on the house!");
-    private final String assignment;
+    CALM("1", "No danger around at all."),
+    NERVOUS("2", "A possibility of dangerous presence."),
+    TERRIFIED("3", "Life threatening danger close by!");
+    private final String model;
+    private final String description;
 
-    Mood(String assignment) {
-        this.assignment = assignment;
+    Mood(String model, String description) {
+        this.model = model;
+        this.description = description;
     }
 
-    public String getAssignment() {
-        return assignment;
+    public String getModel() {
+        return model;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

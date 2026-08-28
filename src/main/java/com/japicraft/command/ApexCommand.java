@@ -3,7 +3,7 @@ package com.japicraft.command;
 import com.japicraft.Deceiv;
 import com.japicraft.container.GameContainer;
 import com.japicraft.game.ArenaLimits;
-import com.japicraft.game.GameManager;
+import com.japicraft.game.GameInstance;
 import com.japicraft.game.Role;
 import com.japicraft.game.RoleManager;
 import com.japicraft.item.DaggerManager;
@@ -26,8 +26,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 @SuppressWarnings("SameReturnValue")
 public class ApexCommand {
@@ -132,31 +134,33 @@ public class ApexCommand {
     }
 
     private int join(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        // add every specified player from the specified game (if possible)
-        GameManager instance = gameContainer.getGameInstance(ctx.getArgument(ApexCommand.ARGUMENT_IDENTIFIER, Key.class));
-        int count = 0;
-        for (Player player : ctx.getArgument(ApexCommand.ARGUMENT_PLAYERS, PlayerSelectorArgumentResolver.class).resolve(ctx.getSource())) {
-            if (gameContainer.addPlayerToGame(player, instance)) count++;
-        }
-        instance.recalculateArenaChances();
-        ctx.getSource().getSender().sendMessage(Component.text("Added " + count + " players to the specified game."));
-        return Command.SINGLE_SUCCESS;
+        return move(ctx, "Added", relation -> gameContainer.addPlayerToGame(relation.player(), relation.instance()));
     }
 
     private int leave(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
+        return move(ctx, "Removed", relation -> gameContainer.removePlayerFromGame(relation.player(), relation.instance()));
+    }
+
+    private int move(CommandContext<CommandSourceStack> ctx, String actionName, Function<PlayerInstanceRelation, Boolean> action) throws CommandSyntaxException {
+        CommandSender sender = ctx.getSource().getSender();
         // remove every specified player from the specified game (if possible)
-        GameManager instance = gameContainer.getGameInstance(ctx.getArgument(ApexCommand.ARGUMENT_IDENTIFIER, Key.class));
+        GameInstance instance = gameContainer.getGameInstance(ctx.getArgument(ApexCommand.ARGUMENT_IDENTIFIER, Key.class));
+        if (instance == null) {
+            sender.sendMessage(Component.text("Game does not exist."));
+            return Command.SINGLE_SUCCESS;
+        }
         int count = 0;
-        for (Player player : ctx.getArgument(ApexCommand.ARGUMENT_PLAYERS, PlayerSelectorArgumentResolver.class).resolve(ctx.getSource())) {
-            if (gameContainer.removePlayerFromGame(player, instance)) count++;
+        List<Player> players = ctx.getArgument(ApexCommand.ARGUMENT_PLAYERS, PlayerSelectorArgumentResolver.class).resolve(ctx.getSource());
+        for (Player player : players) {
+            if (action.apply(new PlayerInstanceRelation(player, instance))) count++;
         }
         instance.recalculateArenaChances();
-        ctx.getSource().getSender().sendMessage(Component.text("Removed " + count + " players from the specified game."));
+        sender.sendMessage(Component.text(actionName + " " + count + " players from the specified game."));
         return Command.SINGLE_SUCCESS;
     }
 
     private int start(CommandContext<CommandSourceStack> ctx) {
-        GameManager instance = gameContainer.getGameInstance(ctx.getArgument(ApexCommand.ARGUMENT_IDENTIFIER, Key.class));
+        GameInstance instance = gameContainer.getGameInstance(ctx.getArgument(ApexCommand.ARGUMENT_IDENTIFIER, Key.class));
         CommandSender sender = ctx.getSource().getSender();
         if (instance == null) {
             sender.sendMessage(Component.text("Specified game does not exist."));
@@ -175,7 +179,7 @@ public class ApexCommand {
     }
 
     private int end(CommandContext<CommandSourceStack> ctx) {
-        GameManager instance = gameContainer.getGameInstance(ctx.getArgument(ApexCommand.ARGUMENT_IDENTIFIER, Key.class));
+        GameInstance instance = gameContainer.getGameInstance(ctx.getArgument(ApexCommand.ARGUMENT_IDENTIFIER, Key.class));
         CommandSender sender = ctx.getSource().getSender();
         if (instance == null) {
             sender.sendMessage(Component.text("Specified game does not exist."));
@@ -189,6 +193,7 @@ public class ApexCommand {
         return Command.SINGLE_SUCCESS;
     }
 
+    @SuppressWarnings("unused")
     private CompletableFuture<Suggestions> suggestInstances(CommandContext<CommandSourceStack> commandSourceStackCommandContext, SuggestionsBuilder suggestionsBuilder) {
         for (Key key : gameContainer.getInstanceKeys()) {
             suggestionsBuilder.suggest(key.asString());
