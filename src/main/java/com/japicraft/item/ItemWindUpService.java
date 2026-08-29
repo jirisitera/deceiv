@@ -98,7 +98,7 @@ public class ItemWindUpService {
                     return;
                 }
                 unique.getAbility().action().accept(new PlayerItemRelation(player, item));
-            }, null, 1, 1);
+            }, null, 1, 4);
         });
     }
 

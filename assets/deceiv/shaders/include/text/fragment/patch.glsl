@@ -16,10 +16,15 @@ if (effect <= 0.0) {
     }
 } else if (effect > 10.0 && effect < 20.0) {
     // moods
-    if (color.a < 0.1 || color.rgb == identifier) {
-        discard;
+    float scale = 1.0;
+    if (effect == 11.0) {
+        scale = getHeartbeatScale(40.0, 1.0);
+    } else if (effect == 12.0) {
+        scale = getHeartbeatScale(60.0, 1.05);
+    } else if (effect == 13.0) {
+        scale = getHeartbeatScale(120.0, 1.25);
     }
-    fragColor = color;
+    fragColor = scaleHeartbeat(scale);
 } else if (effect == 21.0) {
     fragColor = renderProgressBar(color.rgb, texColor.a * ColorModulator.a);
 } else if (effect == 22.0) {

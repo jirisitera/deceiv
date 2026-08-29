@@ -2,7 +2,7 @@ package com.japicraft.item;
 
 import com.japicraft.Deceiv;
 import com.japicraft.event.PlayerEliminateEvent;
-import com.japicraft.event.PlayerFinishUsingItem;
+import com.japicraft.event.PlayerFinishUsingItemEvent;
 import com.japicraft.game.Role;
 import com.japicraft.player.AnimationManager;
 import com.japicraft.player.PlayerItemRelation;
@@ -116,7 +116,7 @@ public class DaggerManager implements ItemHandler {
                 ItemUtilities.applyItemCooldown(player, item, DaggerManager.STAB_COOLDOWN);
                 // end action
                 Bukkit.getPluginManager().callEvent(new PlayerEliminateEvent(victim, player, AnimationManager.DEATH_DAGGER));
-                Bukkit.getPluginManager().callEvent(new PlayerFinishUsingItem(player));
+                Bukkit.getPluginManager().callEvent(new PlayerFinishUsingItemEvent(player));
                 player.clearActiveItem();
                 break;
             }

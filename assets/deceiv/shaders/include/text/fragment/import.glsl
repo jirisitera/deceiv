@@ -68,11 +68,10 @@ vec4 renderBackground(in vec2 fragCoord) {
     vec2 baseCoord = vec2(fragCoord.x, -fragCoord.y);
     float textureScale = 8.0;
     float time = GameTime * 5000.0;
-
+    // wrap position and UV
     vec2 position = baseCoord / textureScale + vec2(-time, time);
     vec2 wrappedPosition = vec2(1.0, 1.0) + mod(position, vec2(16.0, 16.0));
     vec2 wrappedUV = wrappedPosition / vec2(textureSize(Sampler0, 0));
-
     return texture(Sampler0, wrappedUV) * vertexColor * ColorModulator;
 }
 bool isWithinDotRadius(in vec2 fragCoord) {
@@ -81,14 +80,13 @@ bool isWithinDotRadius(in vec2 fragCoord) {
     vec2 dotCoord = pixelatedCoord / dotSize;
     vec2 cell = floor(dotCoord);
     vec2 cellUV = (cell + 0.5) * dotSize / ScreenSize.xy;
-
+    // calculate progress based on opacity
     float progress = vertexColor.a * 1.5 - 0.5;
     float diagonal = (cellUV.x + (1.0 - cellUV.y)) / 2.0;
     float waveProgress = (progress - diagonal + 0.5) * 2.0;
-
+    // check dot radius bounds
     vec2 local = fract(dotCoord) - 0.5;
     float radius = clamp(waveProgress * 1.5, 0.0, 1.5);
-
     return length(local) * 2.0 >= radius;
 }
 vec4 renderProgressBar(vec3 color, float opacity) {
@@ -108,5 +106,51 @@ vec4 renderProgressBarReady(vec4 texColor, vec4 color) {
     }
     float pulse = 0.5 + 0.5 * sin(GameTime * 10000.0);
     return vec4(color.rgb * (0.85 + 0.15 * pulse), color.a * (0.75 + 0.25 * pulse));
+}
+float getHeartbeatScale(float speed, float base) {
+    float time = fract(GameTime * 1200.0 * (speed / 60.0));
+    // combine beat waves to simulate realistic heartbeat
+    float p = exp(-pow((time - 0.15) * 20.0, 2.0)) * 0.15;
+    float q = exp(-pow((time - 0.26) * 50.0, 2.0)) * 0.15;
+    float r = exp(-pow((time - 0.30) * 50.0, 2.0)) * 0.5;
+    float s = exp(-pow((time - 0.34) * 50.0, 2.0)) * 0.3;
+    float t = exp(-pow((time - 0.55) * 15.0, 2.0)) * 0.3;
+    return 1.0 + (p - q + r - s + t) * 0.2 * base;
+}
+vec4 scaleHeartbeat(float scale) {
+    float canvasSize = DECEIV_CANVAS_SIZE * 2.0;
+    float textureSize = 18.0;
+    // calculate local coordinates
+    float currentX = abs(dFdx(localX));
+    float currentY = abs(dFdx(localY));
+    float currentLocalX = (currentX > currentY) ? localX : localY;
+    float currentLocalY = (currentX > currentY) ? localY : localX;
+    // center texture
+    bool invertY = dFdy(currentLocalY) > 0.0;
+    float centerPixels = 10.0 + textureSize / 2.0;
+    vec2 centerLocal = vec2(centerPixels / canvasSize, invertY ? (1.0 - centerPixels / canvasSize) : (centerPixels / canvasSize));
+    vec2 currentLocal = vec2(currentLocalX, currentLocalY);
+    vec2 newLocal = centerLocal + (currentLocal - centerLocal) / scale;
+    // check texture bounds
+    float textureMinX = 10.0 / canvasSize;
+    float textureMaxX = (10.0 + textureSize) / canvasSize;
+    float textureMinY = invertY ? (1.0 - (10.0 + textureSize) / canvasSize) : (10.0 / canvasSize);
+    float textureMaxY = invertY ? (1.0 - 10.0 / canvasSize) : ((10.0 + textureSize) / canvasSize);
+    if (newLocal.x < textureMinX || newLocal.x > textureMaxX || newLocal.y < textureMinY || newLocal.y > textureMaxY) {
+        discard;
+    }
+    float textureX = dFdx(texCoord0.x) / dFdx(currentLocalX);
+    float textureY = dFdy(texCoord0.y) / dFdy(currentLocalY);
+    // UV scaling shift
+    vec2 localShift = newLocal - currentLocal;
+    vec2 finalUV = texCoord0 + vec2(localShift.x * textureX, localShift.y * textureY);
+    // undo vertex shift
+    finalUV -= vec2(abs(textureX) / canvasSize * 10.0, abs(textureY) / canvasSize * 10.0);
+    // build color and remove identifier
+    vec4 color = texture(Sampler0, finalUV) * vertexColor * ColorModulator;
+    if (color.a < 0.1 || color.rgb == identifier) {
+        discard;
+    }
+    return color;
 }
 #endif

@@ -34,11 +34,16 @@ public class CountdownInterface {
         update(CountdownInterface.GAME_LENGTH_SECONDS);
         Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, task -> {
             int currentTicks = counter.getAndDecrement();
-            update(currentTicks);
             if (currentTicks <= 0) {
                 gameInstance.endRound();
                 task.cancel();
+            } else {
+                update(currentTicks);
             }
         }, 20, 20);
+    }
+
+    public void delete() {
+        counter.set(-1);
     }
 }

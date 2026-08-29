@@ -1,7 +1,7 @@
 package com.japicraft.item;
 
 import com.japicraft.Deceiv;
-import com.japicraft.event.PlayerFinishUsingItem;
+import com.japicraft.event.PlayerFinishUsingItemEvent;
 import com.japicraft.player.AnimationManager;
 import com.japicraft.player.PlayerItemRelation;
 import com.japicraft.player.PlayerUtilities;
@@ -90,7 +90,7 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
-    public void onPlayerFinishUsingItem(PlayerFinishUsingItem event) {
+    public void onPlayerFinishUsingItem(PlayerFinishUsingItemEvent event) {
         itemWindUpService.clear(event.getPlayer());
     }
 

@@ -18,4 +18,8 @@ public class MoodManager {
     public Mood get(Player player) {
         return moods.get(player);
     }
+
+    public void scheduleMoodController(Player player) {
+        
+    }
 }

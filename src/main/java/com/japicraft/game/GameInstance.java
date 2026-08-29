@@ -102,6 +102,7 @@ public class GameInstance implements Listener {
 
     public boolean endRound() {
         countdownInterface.hide(Audience.audience(getPlayers()));
+        countdownInterface.delete();
         ActionBarManager.clear(Audience.audience(getPlayers()));
         // only perform if there is an actual round in progress
         if (!isRoundInProgress()) {

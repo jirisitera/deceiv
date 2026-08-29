@@ -2,7 +2,7 @@
   "providers": [
     {
       "type": "bitmap",
-      "ascent": 0,
+      "ascent": -16,
       "height": 512,
       "file": "deceiv:gui/mood/calm.png",
       "chars": ["1"]

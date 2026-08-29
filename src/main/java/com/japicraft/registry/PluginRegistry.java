@@ -8,6 +8,7 @@ import com.japicraft.event.CancelledEvents;
 import com.japicraft.event.PlayerEvents;
 import com.japicraft.hook.Hook;
 import com.japicraft.item.ItemManager;
+import com.japicraft.packet.PacketService;
 import com.japicraft.player.AnimationManager;
 import com.japicraft.player.InteractManager;
 import com.japicraft.ui.DialogManager;
@@ -47,6 +48,7 @@ public class PluginRegistry {
         events.add(new DialogManager());
         events.add(new InteractManager(gameContainer));
         events.add(new ItemManager(plugin, animationManager));
+        events.add(new PacketService());
         // register everything
         registerCommands(commands);
         registerEvents(events);
