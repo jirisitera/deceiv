@@ -3,8 +3,8 @@
     {
       "type": "bitmap",
       "ascent": -16,
-      "height": 512,
-      "file": "deceiv:gui/mood/calm.png",
+      "height": 36,
+      "file": "deceiv:gui/mood/hearts.png",
       "chars": ["1"]
     }
   ]

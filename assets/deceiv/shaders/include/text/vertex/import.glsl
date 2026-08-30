@@ -1,11 +1,15 @@
 #ifdef IS_GUI 
 #moj_import <minecraft:globals.glsl>
 
-#define DECEIV_IDENTIFIER vec2(137.0 / 255.0, 237.0 / 255.0)
+#define DECEIV_IDENTIFIER 0.8
+
 #define DECEIV_CANVAS_SIZE 256.0
 
-out float effect;
+#define DECEIV_HEART_SIZE_SHADOW 10.0
+
 out vec3 identifier;
+flat out int effectGroup;
+flat out int effect;
 out float localX;
 out float localY;
 #endif
