@@ -10,9 +10,9 @@ import java.util.Collection;
 public class PacketRegistry {
     public void initialize() {
         ArrayList<PacketListenerAbstract> events = new ArrayList<>();
-
+        // collect events
         events.add(new HardcorePacket());
-
+        // register events
         registerEvents(events);
     }
 

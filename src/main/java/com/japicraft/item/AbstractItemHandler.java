@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
-public interface ItemHandler {
+public interface AbstractItemHandler {
     boolean compare(ItemStack item);
 
     void handleInteract(Player player, Action action, ItemStack item);

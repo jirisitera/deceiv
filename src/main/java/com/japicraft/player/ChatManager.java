@@ -1,4 +1,4 @@
-package com.japicraft.event;
+package com.japicraft.player;
 
 import com.destroystokyo.paper.profile.PlayerProfile;
 import com.destroystokyo.paper.profile.ProfileProperty;
@@ -9,7 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 
-public class AsyncEvents implements Listener {
+public class ChatManager implements Listener {
     private static final double CHAT_RADIUS = 48.0;
     private static final double SQUARED_RADIUS = CHAT_RADIUS * CHAT_RADIUS;
 

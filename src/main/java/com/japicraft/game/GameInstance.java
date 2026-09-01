@@ -1,10 +1,9 @@
 package com.japicraft.game;
 
-import com.japicraft.Deceiv;
 import com.japicraft.player.Mood;
 import com.japicraft.player.MoodManager;
 import com.japicraft.ui.ActionBarManager;
-import com.japicraft.ui.CountdownInterface;
+import com.japicraft.ui.InfoBoardManager;
 import com.japicraft.ui.InterfaceUtilities;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.entity.Player;
@@ -14,19 +13,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public class GameInstance implements Listener {
-    private final Deceiv plugin;
     private final Arena arena;
-    private final CountdownInterface countdownInterface;
     private final RoleManager roleManager;
     private final MoodManager moodManager;
+    private final InfoBoardManager infoBoardManager;
     private boolean isRoundInProgress = false;
 
-    public GameInstance(Deceiv plugin, ArenaLimits arenaLimits) {
-        this.plugin = plugin;
-        this.arena = new Arena(arenaLimits);
-        this.countdownInterface = new CountdownInterface();
-        this.moodManager = new MoodManager();
+    public GameInstance(ArenaLimits arenaLimits) {
         this.roleManager = new RoleManager();
+        this.arena = new Arena(arenaLimits);
+        this.moodManager = new MoodManager(this);
+        this.infoBoardManager = new InfoBoardManager(this);
     }
 
     public int getRequiredPlayerCount() {
@@ -52,9 +49,8 @@ public class GameInstance implements Listener {
 
     public boolean addPlayer(Player player) {
         boolean state = arena.join(player);
-        countdownInterface.show(player);
-        ActionBarManager.schedule(player, plugin, this);
-        moodManager.set(player, Mood.CALM);
+        ActionBarManager.schedule(player, this);
+        infoBoardManager.initialize();
         return state;
     }
 
@@ -68,13 +64,8 @@ public class GameInstance implements Listener {
 
     public void removePlayer(Player player) {
         arena.leave(player);
-        countdownInterface.hide(player);
+        infoBoardManager.hide(player);
         ActionBarManager.clear(player);
-    }
-
-    public void delete() {
-        endRound();
-        arena.delete();
     }
 
     public void recalculateArenaChances() {
@@ -88,10 +79,14 @@ public class GameInstance implements Listener {
         isRoundInProgress = true;
 
         roleManager.pickRoles(arena);
-        countdownInterface.initialize(plugin, this);
 
         for (Player player : getPlayers()) {
-            InterfaceUtilities.showTransition(player, roleManager.getRole(player), plugin);
+            InterfaceUtilities.showTransition(player, roleManager.getRole(player));
+
+            moodManager.set(player, Mood.CALM);
+            moodManager.scheduleMoodController(player);
+
+            infoBoardManager.show(player);
         }
         return true;
     }
@@ -101,15 +96,17 @@ public class GameInstance implements Listener {
     }
 
     public boolean endRound() {
-        countdownInterface.hide(Audience.audience(getPlayers()));
-        countdownInterface.delete();
         ActionBarManager.clear(Audience.audience(getPlayers()));
+        for (Player player : getPlayers()) {
+            infoBoardManager.hide(player);
+        }
+        infoBoardManager.remove();
+        roleManager.clearRoles();
         // only perform if there is an actual round in progress
         if (!isRoundInProgress()) {
             return false;
         }
         isRoundInProgress = false;
-        roleManager.clearRoles();
         return true;
     }
 }

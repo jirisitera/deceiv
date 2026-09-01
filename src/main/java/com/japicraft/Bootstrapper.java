@@ -1,7 +1,7 @@
 package com.japicraft;
 
-import com.japicraft.ui.InformationInterface;
-import com.japicraft.ui.ShopInterface;
+import com.japicraft.dialog.InformationDialog;
+import com.japicraft.dialog.ShopDialog;
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.bootstrap.PluginBootstrap;
 import io.papermc.paper.plugin.lifecycle.event.LifecycleEventManager;
@@ -49,15 +49,15 @@ public class Bootstrapper implements PluginBootstrap {
     public void registerTags(LifecycleEventManager<BootstrapContext> lifecycleManager) {
         lifecycleManager.registerEventHandler(LifecycleEvents.TAGS.preFlatten(RegistryKey.DIALOG), event -> {
             // register dialog tags
-            event.registrar().setTag(DialogTagKeys.PAUSE_SCREEN_ADDITIONS, Set.of(TagEntry.valueEntry(DialogKeys.create(InformationInterface.DIALOG_KEY))));
-            event.registrar().setTag(DialogTagKeys.QUICK_ACTIONS, Set.of(TagEntry.valueEntry(DialogKeys.create(ShopInterface.DIALOG_KEY))));
+            event.registrar().setTag(DialogTagKeys.PAUSE_SCREEN_ADDITIONS, Set.of(TagEntry.valueEntry(DialogKeys.create(InformationDialog.DIALOG_KEY))));
+            event.registrar().setTag(DialogTagKeys.QUICK_ACTIONS, Set.of(TagEntry.valueEntry(DialogKeys.create(ShopDialog.DIALOG_KEY))));
         });
     }
 
     public void registerDialogs(LifecycleEventManager<BootstrapContext> lifecycleManager) {
         List<PrioritizedLifecycleEventHandlerConfiguration<BootstrapContext>> dialogs = List.of(
-            new InformationInterface().get(),
-            new ShopInterface().get()
+            new InformationDialog().get(),
+            new ShopDialog().get()
         );
         for (PrioritizedLifecycleEventHandlerConfiguration<BootstrapContext> dialog : dialogs) {
             lifecycleManager.registerEventHandler(dialog);

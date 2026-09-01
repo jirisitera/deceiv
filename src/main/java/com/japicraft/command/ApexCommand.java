@@ -1,6 +1,7 @@
 package com.japicraft.command;
 
 import com.japicraft.Deceiv;
+import com.japicraft.config.ConfigManager;
 import com.japicraft.container.GameContainer;
 import com.japicraft.game.ArenaLimits;
 import com.japicraft.game.GameInstance;
@@ -43,8 +44,10 @@ public class ApexCommand {
     }
 
     public LiteralCommandNode<CommandSourceStack> build() {
-
         return Commands.literal(Deceiv.PLUGIN_ID)
+            .then(Commands.literal("reload")
+                .executes(this::reload)
+            )
             .then(Commands.literal("items")
                 .executes(this::items)
             )
@@ -102,6 +105,12 @@ public class ApexCommand {
             RevolverManager.give(player);
             ctx.getSource().getSender().sendMessage(Component.text("Gave ").append(player.name()).append(Component.text(" all special " + Deceiv.PLUGIN_ID + " items.")));
         }
+        return Command.SINGLE_SUCCESS;
+    }
+
+    private int reload(CommandContext<CommandSourceStack> ctx) {
+        ConfigManager.reload();
+        ctx.getSource().getSender().sendMessage(ConfigManager.getConfig().get("prefix") + "Config reloaded successfully!");
         return Command.SINGLE_SUCCESS;
     }
 
@@ -211,7 +220,7 @@ public class ApexCommand {
         if (roleCount < 2) {
             throw new RuntimeException("At least two Game Roles must be defined!");
         }
-        IntegerArgumentType type = IntegerArgumentType.integer(1, ApexCommand.MAX_ROLE_PLAYERS);
+        IntegerArgumentType type = IntegerArgumentType.integer(0, ApexCommand.MAX_ROLE_PLAYERS);
         var subcommand = Commands.argument(buildRoleArgumentName(roles[roleCount - 1].getName()), type).executes(this::create);
         for (int i = 2; i <= roleCount; i++) {
             subcommand = Commands.argument(buildRoleArgumentName(roles[roleCount - i].getName()), type).then(subcommand);

@@ -10,23 +10,23 @@ import net.kyori.adventure.text.object.ObjectContents;
 import org.bukkit.entity.Player;
 
 public class ActionBarManager {
-    public static void schedule(Player player, Deceiv plugin, GameInstance gameInstance) {
-        player.getScheduler().runAtFixedRate(plugin, task -> {
+    public static void schedule(Player player, GameInstance gameInstance) {
+        player.getScheduler().runAtFixedRate(Deceiv.getPlugin(), task -> {
             if (!gameInstance.isPresent(player)) {
                 task.cancel();
                 return;
             }
-            Component actionBarDisplay;
+            Component display;
             if (gameInstance.hasRole(player)) {
-                actionBarDisplay = Component.text(gameInstance.getMood(player).getModel()).font(MoodManager.FONT);
+                display = MoodManager.SPRITE_SHEET.color(gameInstance.getMood(player).getIdentifier());
             } else {
-                actionBarDisplay = Component.object(ObjectContents.playerHead(player.getUniqueId()))
+                display = Component.object(ObjectContents.playerHead(player.getUniqueId()))
                     .append(Component.text(" | ").color(ColorUtilities.GRAY))
                     .append(Component.text("Murderer: " + gameInstance.getRelativeChance(player, Role.MURDERER) + "%").color(Role.MURDERER.getColor()))
                     .append(Component.text(" | ").color(ColorUtilities.GRAY))
                     .append(Component.text("Detective: " + gameInstance.getRelativeChance(player, Role.DETECTIVE) + "%").color(Role.DETECTIVE.getColor()));
             }
-            player.sendActionBar(actionBarDisplay);
+            player.sendActionBar(display);
         }, null, 1, 30);
     }
 

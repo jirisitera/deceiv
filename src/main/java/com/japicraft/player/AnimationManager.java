@@ -1,18 +1,26 @@
 package com.japicraft.player;
 
 import com.japicraft.Deceiv;
+import com.japicraft.event.PlayerEliminateEvent;
 import com.japicraft.hook.BetterModelHook;
 import com.japicraft.hook.Hook;
+import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Interaction;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashSet;
 
-public class AnimationManager {
+public class AnimationManager implements Listener {
     public static final String DEATH_THROWING_DAGGER = "Skewered";
     public static final String DEATH_DAGGER = "Stabbed";
     public static final String DEATH_REVOLVER = "Shot";
@@ -37,6 +45,28 @@ public class AnimationManager {
 
     public void unlockPlayerAnimation(Player player) {
         animationLockedPlayers.remove(player);
+    }
+
+    @EventHandler
+    public void onPlayerSwapHandItems(PlayerSwapHandItemsEvent event) {
+        if (event.getMainHandItem().getType() == Material.AIR && event.getOffHandItem().getType() == Material.AIR) {
+            event.setCancelled(true);
+            Player player = event.getPlayer();
+            // give speed
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, 20, 2, false, false, false));
+            // roll animation
+            playPlayerRollAnimation(player);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerElimination(PlayerEliminateEvent event) {
+        Player victim = event.getVictim();
+        // remove player from game
+        victim.setGameMode(GameMode.SPECTATOR);
+        // play death animation
+        playPlayerDeathAnimation(victim, event.getReason());
     }
 
     public void playPlayerDeathAnimation(Player player, String reason) {

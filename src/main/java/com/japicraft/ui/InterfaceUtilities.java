@@ -24,17 +24,17 @@ public class InterfaceUtilities {
     private static final Component UNKNOWN_COMPONENT = Component.text("???").color(ColorUtilities.GOLD);
     private static final Title BASE_TRANSITION_TITLE = Title.title(TRANSITION_LOADING_COMPONENT, Component.empty(), TRANSITION_FADE, TRANSITION_STAY, TRANSITION_FADE);
 
-    public static void showTransition(Player player, Role role, Deceiv plugin) {
+    public static void showTransition(Player player, Role role) {
         EntityScheduler scheduler = player.getScheduler();
         Component playerHead = Component.object(ObjectContents.playerHead(player.getUniqueId()));
         // show base title
         player.showTitle(BASE_TRANSITION_TITLE);
         // after partly transitioned, show unknown role text
-        scheduler.runDelayed(plugin, _ -> player.sendTitlePart(TitlePart.SUBTITLE, playerHead.append(ROLE_COMPONENT).append(UNKNOWN_COMPONENT)), null, TRANSITION_FADE_HALF);
+        scheduler.runDelayed(Deceiv.getPlugin(), _ -> player.sendTitlePart(TitlePart.SUBTITLE, playerHead.append(ROLE_COMPONENT).append(UNKNOWN_COMPONENT)), null, TRANSITION_FADE_HALF);
         // during transition, reveal role and change background color
-        scheduler.runDelayed(plugin, _ -> player.showTitle(buildRevealTitle(role, playerHead)), null, TRANSITION_FADE_HALF + TRANSITION_STAY_HALF);
+        scheduler.runDelayed(Deceiv.getPlugin(), _ -> player.showTitle(buildRevealTitle(role, playerHead)), null, TRANSITION_FADE_HALF + TRANSITION_STAY_HALF);
         // right before the end of transition, remove role reveal text
-        scheduler.runDelayed(plugin, _ -> player.sendTitlePart(TitlePart.SUBTITLE, Component.empty()), null, TRANSITION_FADE + TRANSITION_STAY + TRANSITION_FADE_HALF);
+        scheduler.runDelayed(Deceiv.getPlugin(), _ -> player.sendTitlePart(TitlePart.SUBTITLE, Component.empty()), null, TRANSITION_FADE + TRANSITION_STAY + TRANSITION_FADE_HALF);
     }
 
     private static Title buildRevealTitle(Role role, Component playerHead) {

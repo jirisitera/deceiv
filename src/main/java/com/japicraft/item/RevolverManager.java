@@ -21,13 +21,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class RevolverManager implements ItemHandler {
+public class RevolverManager implements AbstractItemHandler {
     private static final double SHOT_RANGE = 15.0;
     private static final double SHOT_THICKNESS = 0.2;
     private static final int COOLDOWN = 200;
@@ -51,7 +52,8 @@ public class RevolverManager implements ItemHandler {
             .consumeSeconds(999.0F)
             .build());
         item.setData(DataComponentTypes.USE_EFFECTS, UseEffects.useEffects()
-            .speedMultiplier(0.5F)
+            .canSprint(false)
+            .speedMultiplier(1.0F)
             .build());
         item.setData(DataComponentTypes.SWING_ANIMATION, SwingAnimation.swingAnimation()
             .type(SwingAnimation.Animation.STAB)
@@ -59,7 +61,10 @@ public class RevolverManager implements ItemHandler {
             .build());
         item.setData(DataComponentTypes.ITEM_NAME, Component.text("Revolver").color(Role.DETECTIVE.getColor()));
         item.setData(DataComponentTypes.ITEM_MODEL, Key.key(Deceiv.PLUGIN_ID, UniqueItem.REVOLVER.getModel()));
-        player.give(item);
+
+        PlayerInventory inventory = player.getInventory();
+        inventory.setHeldItemSlot(0);
+        inventory.setItem(1, item);
     }
 
     @Override

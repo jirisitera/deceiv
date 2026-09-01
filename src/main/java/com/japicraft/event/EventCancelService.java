@@ -9,7 +9,22 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 
-public class CancelledEvents implements Listener {
+import java.util.EnumSet;
+
+public class EventCancelService implements Listener {
+    private static final EnumSet<ClickType> CANCELLED_CLICK_TYPES = EnumSet.of(
+        ClickType.DROP,
+        ClickType.CONTROL_DROP,
+        ClickType.WINDOW_BORDER_LEFT,
+        ClickType.WINDOW_BORDER_RIGHT
+    );
+    private static final EnumSet<EntityDamageEvent.DamageCause> CANCELLED_DAMAGE_CAUSES = EnumSet.of(
+        EntityDamageEvent.DamageCause.FALL,
+        EntityDamageEvent.DamageCause.SUFFOCATION,
+        EntityDamageEvent.DamageCause.FIRE,
+        EntityDamageEvent.DamageCause.DROWNING
+    );
+
     @EventHandler
     public void onPlayerDropItem(PlayerDropItemEvent event) {
         event.setCancelled(true);
@@ -17,27 +32,20 @@ public class CancelledEvents implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        ClickType click = event.getClick();
-        if (click == ClickType.DROP || click == ClickType.CONTROL_DROP || click == ClickType.WINDOW_BORDER_LEFT || click == ClickType.WINDOW_BORDER_RIGHT) {
+        if (CANCELLED_CLICK_TYPES.contains(event.getClick())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
-        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+        if (event.getEntity() instanceof Player && CANCELLED_DAMAGE_CAUSES.contains(event.getCause())) {
             event.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onFoodLevelChange(FoodLevelChangeEvent event) {
-        if (!(event.getEntity() instanceof Player)) {
-            return;
-        }
         event.setCancelled(true);
     }
 }

@@ -1,0 +1,5 @@
+prefix: "[Deceiv] "
+modules:
+  proximity-chat: true
+  hidden-nametags: true
+  show-nametags-on-hover: true

@@ -27,10 +27,6 @@ public class Arena {
         activePlayers.remove(player);
     }
 
-    public void delete() {
-        activePlayers.clear();
-    }
-
     public boolean isPresent(Player player) {
         return activePlayers.contains(player);
     }

@@ -28,5 +28,10 @@
     "sounds": [
       "deceiv:revolver/ready"
     ]
+  },
+  "player.heartbeat": {
+    "sounds": [
+      "deceiv:player/heartbeat"
+    ]
   }
 }

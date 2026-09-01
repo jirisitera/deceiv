@@ -1,6 +1,7 @@
-package com.japicraft.ui;
+package com.japicraft.dialog;
 
 import com.japicraft.Deceiv;
+import com.japicraft.ui.InterfaceUtilities;
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
 import io.papermc.paper.plugin.lifecycle.event.handler.configuration.PrioritizedLifecycleEventHandlerConfiguration;
 import io.papermc.paper.registry.data.dialog.ActionButton;
@@ -15,13 +16,13 @@ import net.kyori.adventure.text.Component;
 
 import java.util.List;
 
-public class ShopInterface {
+public class ShopDialog {
     public static final String DIALOG_ID = "shop";
-    public static final Key DIALOG_KEY = Key.key(Deceiv.PLUGIN_ID, ShopInterface.DIALOG_ID);
+    public static final Key DIALOG_KEY = Key.key(Deceiv.PLUGIN_ID, ShopDialog.DIALOG_ID);
 
     public PrioritizedLifecycleEventHandlerConfiguration<BootstrapContext> get() {
         return RegistryEvents.DIALOG.compose().newHandler(event -> event.registry().register(
-                DialogKeys.create(Key.key(Deceiv.PLUGIN_ID, ShopInterface.DIALOG_ID)), builder -> builder
+                DialogKeys.create(Key.key(Deceiv.PLUGIN_ID, ShopDialog.DIALOG_ID)), builder -> builder
                     .base(DialogBase.builder(Component.text("Murderer's Item Shop"))
                         .body(List.of(
                                 DialogBody.plainMessage(Component.empty()),

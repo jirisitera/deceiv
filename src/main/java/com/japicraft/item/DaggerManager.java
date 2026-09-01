@@ -26,7 +26,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.util.function.Consumer;
 
-public class DaggerManager implements ItemHandler {
+public class DaggerManager implements AbstractItemHandler {
     private static final int STAB_DURATION = 10;
     private static final int STAB_COOLDOWN = 1200;
     private static final double STAB_RADIUS = 1.5;
@@ -36,12 +36,10 @@ public class DaggerManager implements ItemHandler {
     private static final int MAX_THROW_DURATION = 100;
 
     private final ItemWindUpService itemWindUpService;
-    private final Deceiv plugin;
     private final AnimationManager animationManager;
 
-    public DaggerManager(ItemWindUpService itemWindUpService, Deceiv plugin, AnimationManager animationManager) {
+    public DaggerManager(ItemWindUpService itemWindUpService, AnimationManager animationManager) {
         this.itemWindUpService = itemWindUpService;
-        this.plugin = plugin;
         this.animationManager = animationManager;
 
         UniqueItem.DAGGER.setAbility(new ItemAbility(getStabAction()));
@@ -67,7 +65,7 @@ public class DaggerManager implements ItemHandler {
         // give item safely, as to not reveal the murderer
         PlayerInventory inventory = player.getInventory();
         inventory.setHeldItemSlot(0);
-        inventory.setItem(4, item);
+        inventory.setItem(1, item);
     }
 
     @Override
@@ -94,7 +92,7 @@ public class DaggerManager implements ItemHandler {
             // attach model to projectile
             animationManager.playDaggerThrowAnimation(projectile);
             // remove the projectile when it lives too long
-            projectile.getScheduler().runDelayed(plugin, _ -> {
+            projectile.getScheduler().runDelayed(Deceiv.getPlugin(), _ -> {
                 if (projectile.isValid()) {
                     projectile.remove();
                 }

@@ -14,7 +14,7 @@
 
 in vec3 identifier;
 flat in int effectGroup;
-flat in int effect;
+flat in int effectType;
 in float localX;
 in float localY;
 
@@ -115,6 +115,7 @@ float getHeartbeatScale(float speed, float base) {
     float r = exp(-pow((time - 0.30) * 50.0, 2.0)) * 0.5;
     float s = exp(-pow((time - 0.34) * 50.0, 2.0)) * 0.3;
     float t = exp(-pow((time - 0.55) * 15.0, 2.0)) * 0.3;
+    // formula: f(x) = 1 + 0.2b * (0.15 * \exp(-((x-0.15)*20)^2) - 0.15 * \exp(-((x-0.26)*50)^2) + 0.5 * \exp(-((x-0.30)*50)^2) - 0.3 * \exp(-((x-0.34)*50)^2) + 0.3 * \exp(-((x-0.55)*15)^2))
     return 1.0 + (p - q + r - s + t) * 0.2 * base;
 }
 bool isShadowColor(vec4 color) {
@@ -172,5 +173,10 @@ vec4 scaleHeartbeat(float scale, float offset) {
         discard;
     }
     return color;
+}
+vec4 renderShutter(in vec2 fragCoord) {
+    float distance = length((fragCoord / ScreenSize.xy * 2.0 - 1.0) * vec2(0.75, 1.0));
+    float radius = (1.0 - vertexColor.a) * 1.6;
+    return vec4(0.0, 0.0, 0.0, smoothstep(radius - 0.3, radius, distance));
 }
 #endif

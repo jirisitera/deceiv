@@ -13,10 +13,10 @@ if (identifier == vec3(1.0)) {
 // determine effect
 if (abs(identifier.r - DECEIV_IDENTIFIER) < 0.01) {
     effectGroup = int(round(identifier.g * 255.0)) / 4;
-    effect = int(round(identifier.b * 255.0)) / 4;
+    effectType = int(round(identifier.b * 255.0)) / 4;
 } else {
     effectGroup = 0;
-    effect = 0;
+    effectType = 0;
 }
 // vertex changes for seperate effect groups
 switch (effectGroup) {

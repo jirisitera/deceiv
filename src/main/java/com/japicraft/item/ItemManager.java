@@ -1,6 +1,5 @@
 package com.japicraft.item;
 
-import com.japicraft.Deceiv;
 import com.japicraft.event.PlayerFinishUsingItemEvent;
 import com.japicraft.player.AnimationManager;
 import com.japicraft.player.PlayerItemRelation;
@@ -19,19 +18,19 @@ import java.util.List;
 
 public class ItemManager implements Listener {
     private static final int DROP_COOLDOWN = 20;
-    private final List<ItemHandler> handlers = new ArrayList<>();
+    private final List<AbstractItemHandler> handlers = new ArrayList<>();
     private final AnimationManager animationManager;
     private final ItemWindUpService itemWindUpService;
 
-    public ItemManager(Deceiv plugin, AnimationManager animationManager) {
+    public ItemManager(AnimationManager animationManager) {
         this.animationManager = animationManager;
-        this.itemWindUpService = new ItemWindUpService(plugin, animationManager);
+        this.itemWindUpService = new ItemWindUpService(animationManager);
 
-        registerHandler(new DaggerManager(itemWindUpService, plugin, animationManager));
+        registerHandler(new DaggerManager(itemWindUpService, animationManager));
         registerHandler(new RevolverManager(itemWindUpService));
     }
 
-    public void registerHandler(ItemHandler handler) {
+    public void registerHandler(AbstractItemHandler handler) {
         this.handlers.add(handler);
     }
 
@@ -45,7 +44,7 @@ public class ItemManager implements Listener {
         if (item == null || ItemUtilities.isOnCooldown(player, item)) {
             return;
         }
-        for (ItemHandler handler : handlers) {
+        for (AbstractItemHandler handler : handlers) {
             if (handler.compare(item)) {
                 handler.handleInteract(player, event.getAction(), item);
                 break;

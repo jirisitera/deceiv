@@ -23,13 +23,11 @@ public class ItemWindUpService {
     private static final Component READY = Component.text("-").font(Key.key(Deceiv.PLUGIN_ID, "windup")).shadowColor(ShadowColor.none());
     private static final int MAX_DURATION = 999 * Ticks.TICKS_PER_SECOND;
     private static final int MIN_DURATION = 5;
-    private final Deceiv plugin;
     private final AnimationManager animationManager;
     private final Map<Player, ScheduledTask> latestRequest = new HashMap<>();
     private final Map<Player, UniqueItem> ready = new HashMap<>();
 
-    public ItemWindUpService(Deceiv plugin, AnimationManager animationManager) {
-        this.plugin = plugin;
+    public ItemWindUpService(AnimationManager animationManager) {
         this.animationManager = animationManager;
     }
 
@@ -80,7 +78,7 @@ public class ItemWindUpService {
             return;
         }
         SoundUtilities.playAsPlayerNearbyWithItem(player, unique, SoundType.ITEM_ACTION_PREPARE);
-        latestRequest.put(player, player.getScheduler().runDelayed(plugin, task -> {
+        latestRequest.put(player, player.getScheduler().runDelayed(Deceiv.getPlugin(), task -> {
             if (hasTaskBeenReplaced(task, player) || !player.hasActiveItem() || ItemUtilities.isOnCooldown(player, item)) {
                 return;
             }
@@ -92,7 +90,7 @@ public class ItemWindUpService {
     public void requestContinuous(Player player, UniqueItem unique, ItemStack item, int duration) {
         processContinuousRequest(player, unique, item, duration, () -> {
             showReadyIndicator(player, unique, MAX_DURATION);
-            player.getScheduler().runAtFixedRate(plugin, task -> {
+            player.getScheduler().runAtFixedRate(Deceiv.getPlugin(), task -> {
                 if (!player.hasActiveItem() || ItemUtilities.isOnCooldown(player, item)) {
                     task.cancel();
                     return;
@@ -110,7 +108,7 @@ public class ItemWindUpService {
         if (passLock(player, duration)) {
             return;
         }
-        player.getScheduler().runDelayed(plugin, _ -> {
+        player.getScheduler().runDelayed(Deceiv.getPlugin(), _ -> {
             if (!ItemUtilities.isHoldingItem(player.getInventory(), unique) || ItemUtilities.isOnCooldown(player, item)) {
                 return;
             }

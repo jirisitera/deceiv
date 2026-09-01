@@ -1,4 +1,4 @@
-package com.japicraft.ui;
+package com.japicraft.dialog;
 
 import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;

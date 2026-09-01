@@ -15,6 +15,13 @@
       "chars": ["|"]
     },
     {
+      "type": "bitmap",
+      "ascent": 128,
+      "height": 256,
+      "file": "deceiv:gui/transition/shutter.png",
+      "chars": ["-"]
+    },
+    {
       "type": "space",
       "advances": {
         "/": -256

@@ -5,7 +5,7 @@
       "ascent": -16,
       "height": 36,
       "file": "deceiv:gui/mood/hearts.png",
-      "chars": ["1"]
+      "chars": ["|"]
     }
   ]
 }

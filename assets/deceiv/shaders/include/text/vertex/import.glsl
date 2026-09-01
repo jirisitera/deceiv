@@ -9,7 +9,7 @@
 
 out vec3 identifier;
 flat out int effectGroup;
-flat out int effect;
+flat out int effectType;
 out float localX;
 out float localY;
 #endif
