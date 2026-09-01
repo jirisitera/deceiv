@@ -65,7 +65,7 @@ public class DaggerManager implements AbstractItemHandler {
         // give item safely, as to not reveal the murderer
         PlayerInventory inventory = player.getInventory();
         inventory.setHeldItemSlot(0);
-        inventory.setItem(1, item);
+        inventory.setItem(4, item);
     }
 
     @Override

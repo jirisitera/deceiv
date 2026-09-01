@@ -51,7 +51,7 @@ public class NametagManager implements Listener {
         Player closestTarget = null;
 
         for (Entity entity : location.getNearbyPlayers(MAX_DISTANCE)) {
-            if (!(entity instanceof Player target) || !target.isValid() || PlayerUtilities.isPlayerInvulnerable(player)) {
+            if (!(entity instanceof Player target) || !target.isValid() || PlayerUtilities.isPlayerInvulnerable(player) || player == target) {
                 continue;
             }
             Location targetLocation = target.getEyeLocation();
