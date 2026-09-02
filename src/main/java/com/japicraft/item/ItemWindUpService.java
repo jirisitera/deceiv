@@ -2,7 +2,6 @@ package com.japicraft.item;
 
 import com.japicraft.Deceiv;
 import com.japicraft.player.AnimationManager;
-import com.japicraft.player.PlayerItemRelation;
 import com.japicraft.sound.SoundType;
 import com.japicraft.sound.SoundUtilities;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
@@ -42,13 +41,9 @@ public class ItemWindUpService {
 
     public void clear(Player player) {
         ready.remove(player);
-        hideIndicator(player);
+        player.clearTitle();
         animationManager.unlockPlayerAnimation(player);
         latestRequest.remove(player);
-    }
-
-    public void hideIndicator(Player player) {
-        player.showTitle(Title.title(Component.empty(), Component.empty()));
     }
 
     private void showPrepareIndicator(Player player, int duration) {
@@ -73,7 +68,7 @@ public class ItemWindUpService {
         return latest == null || latest != task;
     }
 
-    public void processContinuousRequest(Player player, UniqueItem unique, ItemStack item, int duration, Runnable action) {
+    public void requestHeld(Player player, UniqueItem unique, ItemStack item, int duration) {
         if (passLock(player, duration)) {
             return;
         }
@@ -83,25 +78,8 @@ public class ItemWindUpService {
                 return;
             }
             SoundUtilities.playAsPlayerNearbyWithItem(player, unique, SoundType.ITEM_ACTION_READY);
-            action.run();
+            setReady(player, unique);
         }, null, duration));
-    }
-
-    public void requestContinuous(Player player, UniqueItem unique, ItemStack item, int duration) {
-        processContinuousRequest(player, unique, item, duration, () -> {
-            showReadyIndicator(player, unique, MAX_DURATION);
-            player.getScheduler().runAtFixedRate(Deceiv.getPlugin(), task -> {
-                if (!player.hasActiveItem() || ItemUtilities.isOnCooldown(player, item)) {
-                    task.cancel();
-                    return;
-                }
-                unique.getAbility().action().accept(new PlayerItemRelation(player, item));
-            }, null, 1, 4);
-        });
-    }
-
-    public void requestHeld(Player player, UniqueItem unique, ItemStack item, int duration) {
-        processContinuousRequest(player, unique, item, duration, () -> setReady(player, unique));
     }
 
     public void requestDelayed(Player player, UniqueItem unique, int duration, int cooldown, ItemStack item, SoundType sound, Consumer<Player> action) {

@@ -2,7 +2,6 @@ package com.japicraft.game;
 
 import com.japicraft.player.Mood;
 import com.japicraft.player.MoodManager;
-import com.japicraft.ui.ActionBarManager;
 import com.japicraft.ui.InfoBoardManager;
 import com.japicraft.ui.InterfaceUtilities;
 import net.kyori.adventure.audience.Audience;
@@ -49,7 +48,7 @@ public class GameInstance implements Listener {
 
     public boolean addPlayer(Player player) {
         boolean state = arena.join(player);
-        ActionBarManager.schedule(player, this);
+        InterfaceUtilities.scheduleActionBar(player, this);
         infoBoardManager.initialize();
         return state;
     }
@@ -65,7 +64,7 @@ public class GameInstance implements Listener {
     public void removePlayer(Player player) {
         arena.leave(player);
         infoBoardManager.hide(player);
-        ActionBarManager.clear(player);
+        InterfaceUtilities.hideActionBar(player);
     }
 
     public void recalculateArenaChances() {
@@ -96,7 +95,7 @@ public class GameInstance implements Listener {
     }
 
     public boolean endRound() {
-        ActionBarManager.clear(Audience.audience(getPlayers()));
+        InterfaceUtilities.hideActionBar(Audience.audience(getPlayers()));
         for (Player player : getPlayers()) {
             infoBoardManager.hide(player);
         }

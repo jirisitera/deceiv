@@ -1,6 +1,6 @@
 package com.japicraft.item;
 
-import com.japicraft.event.PlayerFinishUsingItemEvent;
+import com.japicraft.event.PlayerEliminateEvent;
 import com.japicraft.player.AnimationManager;
 import com.japicraft.player.PlayerItemRelation;
 import com.japicraft.player.PlayerUtilities;
@@ -53,6 +53,11 @@ public class ItemManager implements Listener {
     }
 
     @EventHandler
+    public void onPlayerElimination(PlayerEliminateEvent event) {
+        itemWindUpService.clear(event.getVictim());
+    }
+
+    @EventHandler
     public void onPlayerStopUsingItem(PlayerStopUsingItemEvent event) {
         Player player = event.getPlayer();
         if (!animationManager.isPlayerAnimationLocked(player)) {
@@ -86,11 +91,6 @@ public class ItemManager implements Listener {
         }
         itemWindUpService.clear(player);
         applyUniqueDropCooldown(player, event.getItemDrop().getItemStack());
-    }
-
-    @EventHandler
-    public void onPlayerFinishUsingItem(PlayerFinishUsingItemEvent event) {
-        itemWindUpService.clear(event.getPlayer());
     }
 
     private void applyUniqueDropCooldown(Player player, ItemStack item) {

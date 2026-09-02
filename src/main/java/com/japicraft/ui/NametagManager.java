@@ -36,10 +36,11 @@ public class NametagManager implements Listener {
             }
             Player target = getClosestTarget(player);
             if (target == null) {
-                return;
+                player.clearTitle();
+            } else {
+                player.showTitle(Title.title(Component.empty(), Component.text(target.getName()), 5, 20, 5));
             }
-            player.showTitle(Title.title(Component.empty(), Component.text(target.getName()), 5, 40, 5));
-        }, null, 40, 40);
+        }, null, 20, 20);
     }
 
     public Player getClosestTarget(Player player) {
@@ -51,7 +52,7 @@ public class NametagManager implements Listener {
         Player closestTarget = null;
 
         for (Entity entity : location.getNearbyPlayers(MAX_DISTANCE)) {
-            if (!(entity instanceof Player target) || !target.isValid() || PlayerUtilities.isPlayerInvulnerable(player) || player == target) {
+            if (!(entity instanceof Player target) || !target.isValid() || PlayerUtilities.isPlayerInvulnerable(player) || PlayerUtilities.isPlayerInvulnerable(target) || player == target) {
                 continue;
             }
             Location targetLocation = target.getEyeLocation();

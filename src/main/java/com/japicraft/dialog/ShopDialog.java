@@ -23,7 +23,7 @@ public class ShopDialog {
     public PrioritizedLifecycleEventHandlerConfiguration<BootstrapContext> get() {
         return RegistryEvents.DIALOG.compose().newHandler(event -> event.registry().register(
                 DialogKeys.create(Key.key(Deceiv.PLUGIN_ID, ShopDialog.DIALOG_ID)), builder -> builder
-                    .base(DialogBase.builder(Component.text("Murderer's Item Shop"))
+                    .base(DialogBase.builder(Component.text("Item Shop"))
                         .body(List.of(
                                 DialogBody.plainMessage(Component.empty()),
                                 DialogBody.plainMessage(Component.empty()),

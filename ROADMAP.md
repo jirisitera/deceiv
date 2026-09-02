@@ -35,6 +35,13 @@
 
 # Todo
 
+- Fix Game Flow!!
+- Looking up throws you back upwards
+- Dagger must be confirmed (backstab - you can only kill from behind)
+- Destructible environment
+- Dagger is in the victim, can be picked up to reduce cooldown
+- Shooting minigame before round
+
 - Dagger Throw Warmup
 - Detective - Create Wanted Poster
 
